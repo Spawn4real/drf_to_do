@@ -19,7 +19,6 @@ class ProjectViewSet(ModelViewSet):
     renderer_classes = [JSONRenderer]
     pagination_class = ProjectLimitOffsetPagination
 
-
     def get_queryset(self):
         name = self.request.query_params.get('name', '')
         projects = Project.objects.all
@@ -35,4 +34,3 @@ class ToDoViewSet(ModelViewSet):
     pagination_class = ToDoLimitOffsetPagination
 
     filterset_fields = ['project_id']
-
