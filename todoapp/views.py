@@ -21,7 +21,7 @@ class ProjectViewSet(ModelViewSet):
 
     def get_queryset(self):
         name = self.request.query_params.get('name', '')
-        projects = Project.objects.all
+        projects = Project.objects.all()
         if name:
             projects = projects.filter(name__contains=name)
 
@@ -32,5 +32,4 @@ class ToDoViewSet(ModelViewSet):
     queryset = ToDo.objects.all()
     serializer_class = ToDoSerializer
     pagination_class = ToDoLimitOffsetPagination
-
     filterset_fields = ['project_id']
