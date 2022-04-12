@@ -13,8 +13,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import graphql
 from django.contrib import admin
 from django.urls import path, include, re_path
+from graphene_django.views import GraphQLView
 from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
@@ -55,4 +57,5 @@ urlpatterns = [
     name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0),
     name='schema-redoc'),
+    path("graphql/", GraphQLView.as_view(graphiql=True)),
 ]

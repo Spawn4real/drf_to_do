@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'rest_framework',
     'django_filters',
+    'graphene_django',
     'userapp',
     'todoapp',
     'corsheaders',
@@ -99,6 +100,12 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'drf_todo.wsgi.application'
+
+
+GRAPHENE = {
+"SCHEMA": "library.schema.schema"
+}
+
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
