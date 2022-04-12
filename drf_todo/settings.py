@@ -35,8 +35,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_yasg',
     'rest_framework',
     'django_filters',
+    'graphene_django',
     'userapp',
     'todoapp',
     'corsheaders',
@@ -76,6 +78,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ],
+    'DEFAULT_VERSIONING_CLASS':'rest_framework.versioning.AcceptHeaderVersioning',
 }
 
 ROOT_URLCONF = 'drf_todo.urls'
@@ -97,6 +100,12 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'drf_todo.wsgi.application'
+
+
+GRAPHENE = {
+"SCHEMA": "library.schema.schema"
+}
+
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
