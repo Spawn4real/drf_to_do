@@ -11,12 +11,19 @@ import Footer from "./components/Footer";
 import LoginForm from './components/Auth.js';
 import Cookies from 'universal-cookie';
 import {Routes, Route, Navigate, BrowserRouter, Link, useLocation} from 'react-router-dom';
+import ProjectForm from './components/ProjectForm';
+import TodoForm from './components/ToDoForm';
 
-const NotFound = () => {
-    let location = useLocation()
-    return (
-        <div> Page {location.pathname} not found </div>
-    )
+const DOMAIN = 'http://127.0.0.1:8000/api/'
+const get_url = (url) => `${DOMAIN}${url}`
+
+
+const NotFound = ({ location }) => {
+  return (
+    <div>
+      <h1>Страница по адресу '{location.pathname}' не найдена</h1>
+    </div>
+  )
 }
 
 
@@ -114,6 +121,67 @@ class App extends React.Component {
         this.get_token_from_storage()
         this.load_data()
     }
+    deleteProject(id) {
+    const headers = this.get_headers()
+    axios.delete(get_url(`project/${id}`), { headers }).then(
+
+      response => {
+        this.load_data()
+
+      }
+    ).catch(error => {
+      console.log(error)
+      this.setState({ projects: [] })
+    })
+  }
+
+  deleteTodo(id) {
+    const headers = this.get_headers()
+    axios.delete(get_url(`todo/${id}`), { headers }).then(
+
+      response => {
+        this.load_data()
+
+      }
+    ).catch(error => {
+      console.log(error)
+      this.setState({ todos: [] })
+    })
+
+  }
+
+  createProject(name, url, users) {
+    const headers = this.get_headers()
+    const data = { name: name, url: url, users: users }
+    console.log(data)
+
+    axios.post(get_url('project/'), data, { headers }).then(
+      response => {
+        this.load_data()
+      }
+    ).catch(error => {
+      console.log(error)
+      this.setState({ projects: [] })
+    })
+
+  }
+
+  createTodo(project, text, user) {
+    const headers = this.get_headers()
+    const data = { project: project, text: text, user: user }
+    console.log(data)
+
+    axios.post(get_url('todo/'), data, { headers }).then(
+      response => {
+        this.load_data()
+      }
+    ).catch(error => {
+      console.log(error)
+      this.setState({ todos: [] })
+    })
+  }
+
+
 
      render() {
         return (
@@ -139,12 +207,20 @@ class App extends React.Component {
                     {/*<SiteMenu/>*/}
                     <Routes>
                         <Route exact path='/' element={<UserList users={this.state.users}/>}/>
-                        <Route exact path='/projects' element={<ProjectList projects={this.state.projects}/>}/>
-                        <Route exact path='/todo' element={<ToDoList todos={this.state.todos}/>}/>
-                        <Route exact path='/login'
-                               element={<LoginForm get_token={(login, password) => this.get_token(login, password)}/>}/>
+                        <Route exact path='/projects' element={<ProjectList projects={this.state.projects} deleteProject=
+                            {(id) => this.deleteProject(id)}/>}/>
+                        <Route exact path='/todo' element={<ToDoList todos={this.state.todos}
+                                                                     deleteTodo={(id) => this.deleteTodo(id)} />} />
+                        <Route exact path='/login' element={() => <LoginForm get_token={(username, password) =>
+                            this.get_token(username, password)} is_authenticated={() => this.is_authenticated()}/>}/>
                         <Route exact path='/projects/:id' element={<UserProjects projects={this.state.projects}/>}/>
                         <Route path="*" element={<NotFound/>}/>
+                        <Route exact path='/projects/create' component={() => <ProjectForm users={this.state.users}
+                        createProject={(name, url, users) => this.createProject(name, url, users)} />} />
+
+                        <Route exact path='/todos/create' component={() => <TodoForm projects={this.state.projects}
+                        users={this.state.users} createTodo={(project, text, user) => this.createTodo(project, text, user)}
+                        />} />
                     </Routes>
                     <Footer/>
                 </BrowserRouter>
